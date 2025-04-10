@@ -121,7 +121,7 @@ const Home = () => {
 
   return (
     <div className="max-w-xl mx-auto p-4 space-y-6">
-      <h1 className="text-2xl font-bold text-center">Knife Steel Recommender</h1>
+      <h1 className="text-2xl font-bold text-center">Steel Engine</h1>
 
       {!result && (
         <Card>
