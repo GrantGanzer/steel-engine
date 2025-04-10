@@ -16,10 +16,11 @@ const Home = () => {
     corrosionConcern: 0,
     sharpeningEase: 0,
     knifeUsage: 0,
-    toughnessWeight: 1,  // Add the weights directly in prefs
+    toughnessWeight: 1,
     edgeRetentionWeight: 1,
     corrosionWeight: 1,
   });
+
   const handleWeightChange = (toughness, edgeRetention, corrosion) => {
     setPrefs({
       ...prefs,
@@ -27,32 +28,48 @@ const Home = () => {
       edgeRetentionWeight: edgeRetention,
       corrosionWeight: corrosion,
     });
-    console.log("Updated preferences:", {
-      ...prefs,
-      toughnessWeight: toughness,
-      edgeRetentionWeight: edgeRetention,
-      corrosionWeight: corrosion,
-    });
-  }
+  };
+
   const [result, setResult] = useState(null);
 
-  // Normalize function to prevent invalid calculations
   const normalize = (val) => {
-    if (val === undefined || val === null || isNaN(val)) return 0; // Ensure the value is a number
-    return val / 12; // Normalize value between 0 and 1
+    if (val === undefined || val === null || isNaN(val)) return 0;
+    return val / 12;
   };
+
   const getScore = (steel, prefs) => {
     if (!steel.toughness || !steel.edgeRetention || !steel.corrosion) {
       console.error(`Invalid data for steel: ${steel.name}`);
       return -1;
     }
 
-    let score = 0;
+    const clamp = val => Math.min(12, Math.max(1, val));
 
-    // Base score using normalized toughness, edge retention, and corrosion properties
-    score += prefs.edgeRetentionWeight * normalize(steel.edgeRetention);
-    score += prefs.toughnessWeight * normalize(steel.toughness);
-    score += prefs.corrosionWeight * normalize(steel.corrosion);
+    let E = prefs.edgeRetentionWeight * 2;
+    let T = prefs.toughnessWeight * 2;
+    let C = prefs.corrosionWeight * 2;
+
+    if (prefs.primaryUse === 1 || prefs.primaryUse === 5) T += 1.5;
+    if (prefs.primaryUse === 3 || prefs.primaryUse === 4) E += 1.5;
+
+    if (prefs.sharpeningFrequency <= 2) E += 1;
+    else if (prefs.sharpeningFrequency >= 4) T += 1;
+
+    if (prefs.corrosionConcern >= 4) C += 1.5;
+
+    E += prefs.sharpeningEase * 0.25;
+
+    if (prefs.knifeUsage === 1) E += 1.5;
+    else if (prefs.knifeUsage === 5) T += 1.5;
+    else {
+      E += 1;
+      T += 1;
+    }
+
+    const score =
+      normalize(steel.edgeRetention) * clamp(E) +
+      normalize(steel.toughness) * clamp(T) +
+      normalize(steel.corrosion) * clamp(C);
 
     return score;
   };
@@ -69,7 +86,7 @@ const Home = () => {
         const tool = steels
           .filter((steel) => steel.category === "Tool")
           .map((steel) => {
-            const score = getScore(steel, newPrefs); // Use the updated prefs with weights
+            const score = getScore(steel, newPrefs);
             return { ...steel, score };
           })
           .sort((a, b) => b.score - a.score)
@@ -104,20 +121,17 @@ const Home = () => {
 
   return (
     <div className="max-w-xl mx-auto p-4 space-y-6">
-      <h1 className="text-2xl font-bold text-center">Blade Steel Recommender</h1>
+      <h1 className="text-2xl font-bold text-center">Knife Steel Recommender</h1>
 
       {!result && (
         <Card>
           <CardContent className="space-y-4 p-4">
-            {/* Step 1: Category Selection */}
             {step === 0 && (
               <div>
                 <p className="mb-2 font-semibold">What type of steel are you most interested in?</p>
                 <p className="text-sm mb-4 text-muted-foreground">
-                  <strong>Stainless Steel</strong>: Excellent corrosion resistance.
-                  <br />
-                  <strong>Tool</strong>: Durable and tough, offering excellent edge retention.
-                  <br />
+                  <strong>Stainless Steel</strong>: Excellent corrosion resistance.<br />
+                  <strong>Tool</strong>: Durable and tough, offering excellent edge retention.<br />
                   <strong>Both</strong>: If you're open to both, we can recommend based on your needs.
                 </p>
                 <div className="space-x-2">
@@ -128,18 +142,15 @@ const Home = () => {
               </div>
             )}
 
-            {/* Step 2: PrefPlot for Selecting Weights */}
             {step === 1 && (
               <div>
-                <PrefPlot onWeightChange={handleWeightChange}  // Pass setPrefs to update prefs
-                />
+                <PrefPlot onWeightChange={handleWeightChange} />
                 <div className="mt-4 space-x-2">
                   <Button onClick={() => handleNext({})}>Next</Button>
                 </div>
               </div>
             )}
 
-            {/* Step 3: Primary Use Selection */}
             {step === 2 && (
               <div>
                 <p className="mb-2 font-semibold">What’s your primary use case for the knife?</p>
@@ -153,7 +164,6 @@ const Home = () => {
               </div>
             )}
 
-            {/* Step 4: Sharpening Frequency */}
             {step === 3 && (
               <div>
                 <p className="mb-2 font-semibold">How often do you plan on sharpening the knife?</p>
@@ -167,7 +177,6 @@ const Home = () => {
               </div>
             )}
 
-            {/* Step 5: Corrosion Concern */}
             {step === 4 && (
               <div>
                 <p className="mb-2 font-semibold">Are you primarily concerned with corrosion resistance?</p>
@@ -181,7 +190,6 @@ const Home = () => {
               </div>
             )}
 
-            {/* Step 6: Sharpening Ease */}
             {step === 5 && (
               <div>
                 <p className="mb-2 font-semibold">Do you have a preference for ease of sharpening?</p>
@@ -195,7 +203,6 @@ const Home = () => {
               </div>
             )}
 
-            {/* Step 7: Knife Usage */}
             {step === 6 && (
               <div>
                 <p className="mb-2 font-semibold">Will your knife be used for delicate slicing or heavy-duty chopping?</p>
