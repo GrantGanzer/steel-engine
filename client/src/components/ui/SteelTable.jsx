@@ -1,26 +1,34 @@
 const SteelTable = ({ steels, title }) => (
-  <div>
-    <h3 className="text-lg font-bold">Top 5 {title} Recommendations:</h3>
-    <table className="min-w-full table-auto">
-      <thead>
-        <tr>
-          <th className="px-4 py-2 border">Steel Name</th>
-          <th className="px-4 py-2 border">Toughness</th>
-          <th className="px-4 py-2 border">Edge Retention</th>
-          <th className="px-4 py-2 border">Corrosion Resistance</th>
-        </tr>
-      </thead>
-      <tbody>
-        {steels.map((steel, index) => (
-          <tr key={index}>
-            <td className="px-4 py-2 border">{steel.name}</td>
-            <td className="px-4 py-2 border">{steel.toughness}</td>
-            <td className="px-4 py-2 border">{steel.edgeRetention}</td>
-            <td className="px-4 py-2 border">{steel.corrosion}</td>
+  <div id="recTable" className="mt-6">
+    <h3 className="text-xl font-semibold text-spydercoRed mb-2">
+      Top 5 {title} Recommendations:
+    </h3>
+    <div className="overflow-x-auto rounded-xl shadow-lg border border-white/10 ">
+      <table className="min-w-full border-separate border-spacing-y-1 text-sm">
+        <thead>
+          <tr className="bg-spydercoRed text-white uppercase text-xs tracking-wider">
+            <th className="px-4 py-3 text-left rounded-tl-xl">Steel Name</th>
+            <th className="px-4 py-3 text-left">Toughness</th>
+            <th className="px-4 py-3 text-left">Edge Retention</th>
+            <th className="px-4 py-3 text-left rounded-tr-xl">Corrosion Resitance</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {steels.map((steel, i) => (
+            <tr
+              key={i}
+              className="bg-zinc-900 hover:bg-zinc-800 transition duration-150 rounded-lg"
+            >
+              <td className="px-4 py-3 border-b border-white/10">{steel.name}</td>
+              <td className="px-4 py-3 border-b border-white/10">{steel.toughness}</td>
+              <td className="px-4 py-3 border-b border-white/10">{steel.edgeRetention}</td>
+              <td className="px-4 py-3 border-b border-white/10">{steel.corrosion}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   </div>
 );
+
 export default SteelTable

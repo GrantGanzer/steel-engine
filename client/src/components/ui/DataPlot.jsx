@@ -51,10 +51,9 @@ const DataPlot = ({ data, prefs }) => {
   const svgRef = useRef();
 
   useEffect(() => {
-    const width = 1000;
-    const height = 800;
-    const margin = 40;
-    const radius = 240;
+    const width = 700;
+    const height = 540;
+    const radius = 200;
     const pointSpreadFactor = 1.9;
 
     const svg = d3.select(svgRef.current);
@@ -100,29 +99,7 @@ const DataPlot = ({ data, prefs }) => {
     const toolSteels = showTool ? data.filter(d => d.category === 'Tool') : [];
     const stainlessSteels = showStainless ? data.filter(d => d.category === 'Stainless') : [];
 
-    let keyTool, keyStainless;
 
-    if (showTool) {
-      keyTool = svg.append('g').attr('transform', `translate(${width - 250}, 40)`);
-      keyTool.append('text')
-        .attr('x', 0)
-        .attr('y', -10)
-        .attr('fill', 'white')
-        .attr('font-size', '14px')
-        .attr('font-weight', 'bold')
-        .text('Tool Steels');
-    }
-
-    if (showStainless) {
-      keyStainless = svg.append('g').attr('transform', `translate(${width - 250}, ${toolSteels.length * 20 + 80})`);
-      keyStainless.append('text')
-        .attr('x', 0)
-        .attr('y', -10)
-        .attr('fill', 'white')
-        .attr('font-size', '14px')
-        .attr('font-weight', 'bold')
-        .text('Stainless Steels');
-    }
     const tooltip = d3.select(svgRef.current.parentNode)
       .append('div')
       .style('position', 'absolute')
@@ -179,24 +156,6 @@ const DataPlot = ({ data, prefs }) => {
         .attr('alignment-baseline', 'middle')
         .attr('fill', color)
         .text(item.name);
-
-      const keyGroup = item.category === 'Tool' ? keyTool : keyStainless;
-      const groupIndex = item.category === 'Tool'
-        ? toolSteels.findIndex(d => d.name === item.name)
-        : stainlessSteels.findIndex(d => d.name === item.name);
-
-      keyGroup.append('circle')
-        .attr('cx', 0)
-        .attr('cy', groupIndex * 20)
-        .attr('r', 5)
-        .attr('fill', color);
-
-      keyGroup.append('text')
-        .attr('x', 10)
-        .attr('y', groupIndex * 20 + 4)
-        .attr('fill', 'white')
-        .attr('font-size', '12px')
-        .text(`${item.name} (T:${T}, E:${E}, C:${C})`);
     });
 
     // Use getUserTecPreference to calculate adjusted TEC
@@ -222,17 +181,20 @@ const DataPlot = ({ data, prefs }) => {
           .attr('cy', ty)
           .attr('r', 8)
           .attr('fill', 'white')
-          .on('mouseover', function (event) {
-            tooltip.style('display', 'block')
-              .html(`Your Preference<br/>T: ${toughness.toFixed(1)}, E: ${edgeRetention.toFixed(1)}, C: ${corrosion.toFixed(1)}`);
-          })
-          .on('mousemove', function (event) {
-            tooltip.style('left', `${event.pageX + 10}px`)
-              .style('top', `${event.pageY - 28}px`);
-          })
-          .on('mouseout', function () {
-            tooltip.style('display', 'none');
-          });
+
+          // mousover feature for user prefrence score
+
+          // .on('mouseover', function (event) {
+          //   tooltip.style('display', 'block')
+          //     .html(`Your Preference<br/>T: ${toughness.toFixed(1)}, E: ${edgeRetention.toFixed(1)}, C: ${corrosion.toFixed(1)}`);
+          // })
+          // .on('mousemove', function (event) {
+          //   tooltip.style('left', `${event.pageX + 10}px`)
+          //     .style('top', `${event.pageY - 28}px`);
+          // })
+          // .on('mouseout', function () {
+          //   tooltip.style('display', 'none');
+          // });
 
         g.append('text')
           .attr('x', tx + 12)
@@ -246,7 +208,7 @@ const DataPlot = ({ data, prefs }) => {
     }
   }, [data, prefs]);
 
-  return <svg ref={svgRef}></svg>;
+  return <div><svg ref={svgRef}></svg></div>;
 };
 
 export default DataPlot;

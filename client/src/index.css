@@ -1,3 +1,4 @@
+/* ========== Root & Base Styles ========== */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -13,6 +14,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ========== Typography ========== */
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #121212;
+  color: white;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -22,47 +35,110 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+/* ========== Layout Containers ========== */
+.app-container {
+  max-width: 64rem; /* ~max-w-4xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem 1rem; /* py-8 px-4 */
+  color: white;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10rem;
+  z-index: 50;
+  background-color: #121212;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  padding-bottom: 10px;
+}
+
+/* ========== Header & Text ========== */
+.app-header {
+  text-align: center;
+  font-size: 4.875rem;
+  font-weight: 650;
+  font-stretch: ultra-expanded;
+  text-transform: uppercase;
+  color: #990000; /* spydercoRed */
+}
+
+.app-subtext {
+  text-align: center;
+  font-size: 1rem;
+  margin: 0 auto 20px auto;
+}
+
+.question {
+  font-weight: 500;
+  font-size: larger;
+  margin-bottom: 10px;
+}
+
+/* ========== PrefPlot ========== */
+.prefplot-wrapper {
+  justify-content: center;
+}
+
+.prefplot-chart {
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+#prefplot {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ========== Results & Tables ========== */
+.resultContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.contentContainer {
+  padding-top: 100px;
+  display: flex;
+}
+
+.dataDisplay {
+  display: flex;
+  align-items: start;
+  justify-content: space-around;
+}
+
+.tableContainer {
+  display: flex;
+  align-items: start;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+#recTable {
+  margin: 30px;
+}
+
+#key {
+  display: flex;
+  align-items: start;
+  justify-content: space-evenly;
+  margin-left: -80px;
+}
+.logo-img {
+  max-width: 500px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  object-fit: contain;
 }

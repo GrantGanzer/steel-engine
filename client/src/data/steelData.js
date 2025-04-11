@@ -105,13 +105,6 @@ export const steels = [
     corrosion: 4.0,
     category: "Tool",
   },
-  {
-    name: "Z-Tuff",
-    toughness: 10.0,
-    edgeRetention: 10.0,
-    corrosion: 5.5,
-    category: "Tool",
-  },
 
   // Stainless Steels
   {

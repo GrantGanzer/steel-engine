@@ -152,14 +152,14 @@ const PrefPlot = ({ onWeightChange }) => {
 
   return (
     <div>
-      <div className="mb-4 p-3 bg-gray-800 rounded-lg text-white text-sm">
+      <div className="mb-4 p-3 rounded-lg text-white text-m">
         <p><strong>Set your TEC preferences:</strong></p>
         <p>Favoring toughness will highlight steels that resist chipping and excel under impact.</p>
         <p>Choosing edge retention prioritizes steels that stay sharper for longer.</p>
         <p>Emphasizing corrosion resistance brings forward options better suited to wet or humid conditions.</p>
         <p className="mt-2">These choices will shape the recommendations we make for you.</p>
       </div>
-      <svg id="prefplot" style={{ overflow: 'visible' }}></svg>
+      <svg id="prefplot" className="prefplot-chart" style={{ overflow: 'visible' }}></svg>
       <div className="mt-4">
         <p>Toughness Weight: {toughnessWeight.toFixed(2)}</p>
         <p>Edge Retention Weight: {edgeRetentionWeight.toFixed(2)}</p>
