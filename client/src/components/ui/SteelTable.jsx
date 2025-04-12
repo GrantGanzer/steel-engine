@@ -1,5 +1,5 @@
 const SteelTable = ({ steels, title }) => (
-  <div id="recTable" className="mt-6">
+  <div className="container mx-auto px-4 mt-8">
     <h3 className="text-xl font-semibold text-spydercoRed mb-2">
       Top 5 {title} Recommendations:
     </h3>

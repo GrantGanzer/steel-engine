@@ -134,7 +134,7 @@ const PrefPlot = ({ onWeightChange }) => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center">
+<div className="flex flex-col items-center container mx-auto px-4">
       <div className="mb-4 p-3 rounded-lg text-white text-m">
         <p><strong>Set your TEC preferences:</strong></p>
         <p>Favoring toughness will highlight steels that resist chipping and excel under impact.</p>
@@ -146,15 +146,15 @@ const PrefPlot = ({ onWeightChange }) => {
       <div className="mt-6 flex flex-col items-start gap-3">
         <div className="flex items-center gap-2">
           <p className="text-white text-sm w-32">Toughness</p>
-          <div className="h-4 bg-white" style={{ width: `${toughnessWeight * 35-30}px` }}></div>
+          <div className="h-4 bg-white" style={{ width: `${toughnessWeight * 35 - 30}px` }}></div>
         </div>
         <div className="flex items-center gap-2">
           <p className="text-white text-sm w-32">Edge Retention</p>
-          <div className="h-4 bg-white" style={{ width: `${edgeRetentionWeight * 35-30}px` }}></div>
+          <div className="h-4 bg-white" style={{ width: `${edgeRetentionWeight * 35 - 30}px` }}></div>
         </div>
         <div className="flex items-center gap-2">
           <p className="text-white text-sm w-32">Corrosion Resistance</p>
-          <div className="h-4 bg-white" style={{ width: `${corrosionWeight * 35-30}px` }}></div>
+          <div className="h-4 bg-white" style={{ width: `${corrosionWeight * 35 - 30}px` }}></div>
         </div>
       </div>
     </div>

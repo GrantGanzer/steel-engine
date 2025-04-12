@@ -155,7 +155,7 @@ const Home = () => {
   );
 
   return (
-    <div className="app-container">
+    <div className="container mx-auto px-4 pt-40">
       <Nav resetQuestionnaire={resetQuestionnaire} />
 
       <div className="contentContainer">
@@ -169,13 +169,13 @@ const Home = () => {
           <Card>
             <CardContent className="p-6 text-center">
               <div className="resultContainer">
-                <div className="tableContainer">
+                <div className="flex flex-col md:flex-row gap-4">
                   {Array.isArray(result) && <SteelTable steels={result} title={prefs.category + " Steel"} />}
                   {result.tool && result.tool.length > 0 && <SteelTable steels={result.tool} title="Tool Steel" />}
                   {result.stainless && result.stainless.length > 0 && <SteelTable steels={result.stainless} title="Stainless Steel" />}
                 </div>
 
-                <div className="dataDisplay">
+                <div className="flex flex-col md:flex-row gap-4">
                   <DataPlot data={steels} prefs={prefs} />
                   <SteelKey steels={steels} prefs={prefs} />
                 </div>
