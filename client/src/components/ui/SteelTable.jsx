@@ -3,10 +3,8 @@ const SteelTable = ({ steels, title }) => (
     <h3 className="text-xl font-semibold text-spydercoRed mb-2">
       Top 5 {title} Recommendations:
     </h3>
-    <div className="w-4/5 mx-auto overflow-x-auto rounded-xl shadow-lg border border-white/10">
-
-      <table className="min-w-full mx-auto border-separate border-spacing-y-1 text-sm">
-
+    <div className="overflow-x-auto rounded-xl shadow-lg border border-white/10 ">
+      <table className="min-w-full border-separate border-spacing-y-1 text-sm">
         <thead>
           <tr className="bg-spydercoRed text-white uppercase text-xs tracking-wider">
             <th className="px-4 py-3 text-left rounded-tl-xl">Steel Name</th>

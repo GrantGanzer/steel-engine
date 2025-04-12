@@ -84,6 +84,7 @@ h1 {
 #key {
   display: flex;
   align-items: start;
+  justify-content: space-evenly;
   margin-left: -80px;
 }
 .logo-img {
