@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { select, drag } from "d3";
 
-// PrefPlot allows users to interactively set their TEC (Toughness, Edge Retention, Corrosion) preferences.
 const PrefPlot = ({ onWeightChange }) => {
   const [toughnessWeight, setToughnessWeight] = useState(1);
   const [edgeRetentionWeight, setEdgeRetentionWeight] = useState(1);
   const [corrosionWeight, setCorrosionWeight] = useState(1);
 
-  // Update local state and notify parent when weights are changed
   const handleWeightChange = (t, e, c) => {
     setToughnessWeight(t);
     setEdgeRetentionWeight(e);
@@ -16,26 +14,22 @@ const PrefPlot = ({ onWeightChange }) => {
   };
 
   useEffect(() => {
-    const width = 450;
+    const svg = select("#prefplot");
+    svg.selectAll("*").remove();
+
+    const width = 685;
     const height = 240;
     const radius = 150;
 
-    // Create SVG
-    const svg = select("#prefplot")
-      .attr("width", width)
-      .attr("height", height)
-      .style("background-color", "transparent");
+    const g = svg
+      .append("g")
+      .attr("transform", `translate(${width / 2}, ${height})`);
 
-    // Center group at the bottom center of the SVG
-    const g = svg.append("g").attr("transform", `translate(${width / 2}, ${height})`);
-
-    // Draw half-circle arc for visual boundary
     g.append("path")
       .attr("d", `M -${radius} 0 A ${radius} ${radius} 0 0 1 ${radius} 0`)
       .attr("stroke", "white")
       .attr("fill", "none");
 
-    // Define label positions and titles
     const corners = [
       [0, -radius],
       [radius, 0],
@@ -43,7 +37,6 @@ const PrefPlot = ({ onWeightChange }) => {
     ];
     const labels = ["Corrosion Resistance", "Edge Retention", "Toughness"];
 
-    // Render labels
     corners.forEach(([x, y], i) => {
       let labelX = x * 1.4;
       let labelY = y * 1.15;
@@ -61,7 +54,6 @@ const PrefPlot = ({ onWeightChange }) => {
         .text(labels[i]);
     });
 
-    // Draw guide axis lines
     const axisAngles = [0, Math.PI];
     axisAngles.forEach((angle) => {
       const x1 = radius * Math.cos(angle);
@@ -75,7 +67,6 @@ const PrefPlot = ({ onWeightChange }) => {
         .attr("stroke-width", 1);
     });
 
-    // Add initial center dot (visual reference)
     g.append("circle")
       .attr("r", 8)
       .attr("fill", "white")
@@ -83,7 +74,6 @@ const PrefPlot = ({ onWeightChange }) => {
       .attr("cy", 0)
       .attr("class", "center-dot");
 
-    // Initialize user-controlled draggable point
     let currentX = 0;
     let currentY = 0;
 
@@ -134,7 +124,7 @@ const PrefPlot = ({ onWeightChange }) => {
   }, []);
 
   return (
-<div className="flex flex-col items-center container mx-auto px-4">
+    <div className="flex flex-col items-center w-full max-w-3xl px-4 mx-auto">
       <div className="mb-4 p-3 rounded-lg text-white text-m">
         <p><strong>Set your TEC preferences:</strong></p>
         <p>Favoring toughness will highlight steels that resist chipping and excel under impact.</p>
@@ -142,8 +132,15 @@ const PrefPlot = ({ onWeightChange }) => {
         <p>Emphasizing corrosion resistance brings forward options better suited to wet or humid conditions.</p>
         <p className="mt-2">These choices will shape the recommendations we make for you.</p>
       </div>
-      <svg id="prefplot" className="prefplot-chart" style={{ overflow: 'visible' }}></svg>
-      <div className="mt-6 flex flex-col items-start gap-3">
+      <div className="w-full overflow-x-auto">
+        <svg
+          id="prefplot"
+          className="prefplot-chart"
+          viewBox="0 0 700 300"
+          preserveAspectRatio="xMidYMid meet"
+        ></svg>
+      </div>
+      <div className="mt-6 flex flex-col items-start gap-3 w-full sm:w-auto">
         <div className="flex items-center gap-2">
           <p className="text-white text-sm w-32">Toughness</p>
           <div className="h-4 bg-white" style={{ width: `${toughnessWeight * 35 - 30}px` }}></div>

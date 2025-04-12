@@ -51,8 +51,8 @@ const DataPlot = ({ data, prefs }) => {
   const svgRef = useRef();
 
   useEffect(() => {
-    const width = 700;
-    const height = 540;
+    const width = Math.min(window.innerWidth - 40, 700); // responsive max
+    const height = width * 0.77; // keep a proportional height (adjust as needed)
     const radius = 200;
     const pointSpreadFactor = 1.9;
 
@@ -182,19 +182,19 @@ const DataPlot = ({ data, prefs }) => {
           .attr('r', 8)
           .attr('fill', 'white')
 
-          // mousover feature for user prefrence score
+        // mousover feature for user prefrence score
 
-          // .on('mouseover', function (event) {
-          //   tooltip.style('display', 'block')
-          //     .html(`Your Preference<br/>T: ${toughness.toFixed(1)}, E: ${edgeRetention.toFixed(1)}, C: ${corrosion.toFixed(1)}`);
-          // })
-          // .on('mousemove', function (event) {
-          //   tooltip.style('left', `${event.pageX + 10}px`)
-          //     .style('top', `${event.pageY - 28}px`);
-          // })
-          // .on('mouseout', function () {
-          //   tooltip.style('display', 'none');
-          // });
+        // .on('mouseover', function (event) {
+        //   tooltip.style('display', 'block')
+        //     .html(`Your Preference<br/>T: ${toughness.toFixed(1)}, E: ${edgeRetention.toFixed(1)}, C: ${corrosion.toFixed(1)}`);
+        // })
+        // .on('mousemove', function (event) {
+        //   tooltip.style('left', `${event.pageX + 10}px`)
+        //     .style('top', `${event.pageY - 28}px`);
+        // })
+        // .on('mouseout', function () {
+        //   tooltip.style('display', 'none');
+        // });
 
         g.append('text')
           .attr('x', tx + 12)
@@ -208,7 +208,9 @@ const DataPlot = ({ data, prefs }) => {
     }
   }, [data, prefs]);
 
-  return <div><svg ref={svgRef}></svg></div>;
+  return <div className="w-full max-w-[700px] mx-auto px-4">
+    <svg ref={svgRef} className="w-full h-auto block" />
+  </div>;
 };
 
 export default DataPlot;
