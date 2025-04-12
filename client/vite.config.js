@@ -1,9 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 
-// https://vite.dev/config/
+// This tells Vite not to use LightningCSS (which it does by default now)
 export default defineConfig({
-  plugins: [react(),tailwindcss()],
-
+  plugins: [react()],
+  css: {
+    postcss: './postcss.config.cjs',
+    // 👇 Forces Vite to use classic PostCSS pipeline
+    transformer: 'postcss',
+  },
 })
