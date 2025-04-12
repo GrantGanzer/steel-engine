@@ -59,11 +59,11 @@ const DataPlot = ({ data, prefs }) => {
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
     svg
-      .attr('width', width)
-      .attr('height', height)
       .style('background-color', 'transparent');
 
-    const g = svg.append('g').attr('transform', `translate(${width / 2 - 100}, ${height / 2})`);
+    const g = svg.append('g')
+      .attr('transform', `translate(${700 / 2}, ${540 / 2})`);
+
 
     g.append('circle')
       .attr('cx', 0)
@@ -208,14 +208,16 @@ const DataPlot = ({ data, prefs }) => {
     }
   }, [data, prefs]);
 
-  return <div className="pt-40 px-4 w-full flex justify-center items-center overflow-x-auto">
-    <svg
-      ref={svgRef}
-      viewBox="0 0 700 540"
-      preserveAspectRatio="xMidYMid meet"
-      className="w-full h-auto max-w-[700px]"
-    ></svg>
-  </div>
+  return (
+    <div className="w-full flex justify-center items-center px-4 overflow-x-auto">
+      <svg
+        ref={svgRef}
+        className="w-full h-auto max-w-[700px]"
+        viewBox="0 0 700 540"
+        preserveAspectRatio="xMidYMid meet"
+      ></svg>
+    </div>
+  );
 
 };
 
