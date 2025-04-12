@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Nav = ({resetQuestionnaire}) => (
+const Nav = ({ resetQuestionnaire }) => (
     <div className="nav">
         <button onClick={resetQuestionnaire}>
             <img

@@ -175,7 +175,7 @@ const Home = () => {
                   {result.stainless && result.stainless.length > 0 && <SteelTable steels={result.stainless} title="Stainless Steel" />}
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-6 justify-around">
+                <div className="flex flex-col md:flex-row justify-around">
                   <DataPlot data={steels} prefs={prefs} />
                   <SteelKey steels={steels} prefs={prefs} />
                 </div>

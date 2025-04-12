@@ -15,6 +15,7 @@ body,
   font-family: "Helvetica Neue", Arial, sans-serif;
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
 }
 
 /* ========== Typography ========== */
@@ -83,8 +84,7 @@ h1 {
 #key {
   display: flex;
   align-items: start;
-  justify-content: space-evenly;
-  margin-left: -120px;
+  margin-left: -80px;
 }
 .logo-img {
   max-width: 500px;
