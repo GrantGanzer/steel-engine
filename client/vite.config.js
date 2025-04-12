@@ -1,12 +1,9 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
-// This tells Vite not to use LightningCSS (which it does by default now)
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   css: {
-    postcss: './postcss.config.cjs',
-    // 👇 Forces Vite to use classic PostCSS pipeline
-    transformer: 'postcss',
+    postcss: "./postcss.config.cjs",
+    transformer: "postcss",
   },
-})
+});

@@ -1,13 +1,16 @@
 import React from 'react';
 
-const Nav = () => (
+
+const Nav = ({resetQuestionnaire}) => (
     <div className="nav">
-        <img
-            src="/images/logohigh.jpg"
-            alt="SteelEngine Logo"
-            className="logo-img"
-        />
-        <p className="logo-sub">Custom steel recommendations</p>
+        <button onClick={resetQuestionnaire}>
+            <img
+                src="/images/logohigh.jpg"
+                alt="SteelEngine Logo"
+                className="logo-img"
+            />
+            <p className="logo-sub">Custom steel recommendations</p>
+        </button>
     </div>
 );
 
