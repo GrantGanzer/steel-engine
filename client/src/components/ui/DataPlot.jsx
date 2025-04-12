@@ -182,19 +182,19 @@ const DataPlot = ({ data, prefs }) => {
           .attr('r', 8)
           .attr('fill', 'white')
 
-          // mousover feature for user prefrence score
+        // mousover feature for user prefrence score
 
-          // .on('mouseover', function (event) {
-          //   tooltip.style('display', 'block')
-          //     .html(`Your Preference<br/>T: ${toughness.toFixed(1)}, E: ${edgeRetention.toFixed(1)}, C: ${corrosion.toFixed(1)}`);
-          // })
-          // .on('mousemove', function (event) {
-          //   tooltip.style('left', `${event.pageX + 10}px`)
-          //     .style('top', `${event.pageY - 28}px`);
-          // })
-          // .on('mouseout', function () {
-          //   tooltip.style('display', 'none');
-          // });
+        // .on('mouseover', function (event) {
+        //   tooltip.style('display', 'block')
+        //     .html(`Your Preference<br/>T: ${toughness.toFixed(1)}, E: ${edgeRetention.toFixed(1)}, C: ${corrosion.toFixed(1)}`);
+        // })
+        // .on('mousemove', function (event) {
+        //   tooltip.style('left', `${event.pageX + 10}px`)
+        //     .style('top', `${event.pageY - 28}px`);
+        // })
+        // .on('mouseout', function () {
+        //   tooltip.style('display', 'none');
+        // });
 
         g.append('text')
           .attr('x', tx + 12)
@@ -208,7 +208,15 @@ const DataPlot = ({ data, prefs }) => {
     }
   }, [data, prefs]);
 
-  return <div><svg ref={svgRef}></svg></div>;
+  return <div className="pt-40 px-4 w-full flex justify-center items-center overflow-x-auto">
+    <svg
+      ref={svgRef}
+      viewBox="0 0 700 540"
+      preserveAspectRatio="xMidYMid meet"
+      className="w-full h-auto max-w-[700px]"
+    ></svg>
+  </div>
+
 };
 
 export default DataPlot;
