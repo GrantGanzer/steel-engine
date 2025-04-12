@@ -17,7 +17,7 @@ const PrefPlot = ({ onWeightChange }) => {
     const svg = select("#prefplot");
     svg.selectAll("*").remove();
 
-    const width = 685;
+    const width = 600;
     const height = 240;
     const radius = 150;
 
@@ -136,7 +136,7 @@ const PrefPlot = ({ onWeightChange }) => {
         <svg
           id="prefplot"
           className="prefplot-chart"
-          viewBox="0 0 700 300"
+          viewBox="0 0 600 300"
           preserveAspectRatio="xMidYMid meet"
         ></svg>
       </div>
