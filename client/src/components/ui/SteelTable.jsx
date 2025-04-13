@@ -1,7 +1,7 @@
 const SteelTable = ({ steels, title }) => (
-  <div className="container mx-auto px-4 mt-8">
-    <div className="overflow-x-auto rounded-xl border-spacing-1 border-white/10 ">
-      <table className="min-w-full border-separate border-spacing-y-1 text-sm">
+  <div className="w-full mt-4 px-2">
+    <div className="w-full rounded-xl border-spacing-1 border-white/10 ">
+      <table className="w-full table-fixed text-sm leading-tight">
         <thead>
           <tr>
             <td
@@ -11,7 +11,6 @@ const SteelTable = ({ steels, title }) => (
               Top 5 {title} Recommendations:
             </td>
           </tr>
-
           <tr className="bg-spydercoRed text-white uppercase text-xs tracking-wider">
             <th className="px-4 py-3 rounded-tl-xl">Steel Name</th>
             <th className="px-4 py-3 ">Toughness</th>

@@ -1,16 +1,22 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 
-// Updated function to use weights directly from prefs
 const getUserTecPreference = (prefs) => {
-  let { toughnessWeight, edgeRetentionWeight, corrosionWeight, primaryUse, sharpeningFrequency, corrosionConcern, sharpeningEase, knifeUsage } = prefs;
+  let {
+    toughnessWeight,
+    edgeRetentionWeight,
+    corrosionWeight,
+    primaryUse,
+    sharpeningFrequency,
+    corrosionConcern,
+    sharpeningEase,
+    knifeUsage,
+  } = prefs;
 
-  // Adjust base TEC influence values based on the user's weights
   let E = edgeRetentionWeight * 0.5;
   let T = toughnessWeight * 0.5;
   let C = corrosionWeight * 0.5;
 
-  // Adjust for primary use case (same logic)
   if (primaryUse === 1 || primaryUse === 5) {
     T += 1.0;
     E -= 0.5;
@@ -19,17 +25,13 @@ const getUserTecPreference = (prefs) => {
     T -= 0.5;
   }
 
-  // Frequency-based adjustment
   if (sharpeningFrequency <= 2) E += 1;
   else if (sharpeningFrequency >= 4) T += 1.2;
 
-  // Corrosion concern adjustment
   if (corrosionConcern >= 4) C += 1.2;
 
-  // Sharpening ease adjustment
   E += sharpeningEase * 0.2;
 
-  // Knife usage adjustment
   if (knifeUsage === 1) E += 1.2;
   else if (knifeUsage === 5) T += 1.0;
   else {
@@ -37,13 +39,11 @@ const getUserTecPreference = (prefs) => {
     T += 0.8;
   }
 
-  // Clamp scores to a max of 13
   const clamp13 = val => Math.min(13, Math.max(0, val));
-
   return {
     edgeRetention: clamp13(E),
     toughness: clamp13(T),
-    corrosion: clamp13(C)
+    corrosion: clamp13(C),
   };
 };
 
@@ -51,27 +51,24 @@ const DataPlot = ({ data, prefs }) => {
   const svgRef = useRef();
 
   useEffect(() => {
-    const width = Math.min(window.innerWidth - 40, 700); // responsive max
-    const height = width * 0.77; // keep a proportional height (adjust as needed)
+    const width = 700;
+    const height = 540;
     const radius = 200;
-    const pointSpreadFactor = 1.9;
+    const spread = 1.9;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
-    svg
-      .style('background-color', 'transparent');
+    svg.style('background-color', 'transparent');
 
-    const g = svg.append('g')
-      .attr('transform', `translate(${700 / 2}, ${540 / 2})`);
+    const g = svg.append('g').attr('transform', `translate(${width / 2}, ${height / 2})`);
 
-
+    // Outer triangle
     g.append('circle')
-      .attr('cx', 0)
-      .attr('cy', 0)
       .attr('r', radius)
       .attr('stroke', 'white')
       .attr('fill', 'none');
 
+    // Triangle corners: [Corrosion, Toughness, Edge Retention]
     const corners = [
       [0, -radius],
       [-radius * Math.sin(Math.PI / 3), radius * Math.cos(Math.PI / 3)],
@@ -93,15 +90,13 @@ const DataPlot = ({ data, prefs }) => {
 
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-    const showTool = prefs.category === 'Tool' || prefs.category === 'Both';
-    const showStainless = prefs.category === 'Stainless' || prefs.category === 'Both';
-
-    const toolSteels = showTool ? data.filter(d => d.category === 'Tool') : [];
-    const stainlessSteels = showStainless ? data.filter(d => d.category === 'Stainless') : [];
-
+    const steelsToShow = data.filter(d =>
+      prefs.category === 'Both' || d.category === prefs.category
+    );
 
     const tooltip = d3.select(svgRef.current.parentNode)
       .append('div')
+      .attr('class', 'dataplot-tooltip')
       .style('position', 'absolute')
       .style('background', 'white')
       .style('color', 'black')
@@ -111,20 +106,14 @@ const DataPlot = ({ data, prefs }) => {
       .style('pointer-events', 'none')
       .style('display', 'none');
 
-    const filteredData = data.filter(d =>
-      (prefs.category === 'Tool' && d.category === 'Tool') ||
-      (prefs.category === 'Stainless' && d.category === 'Stainless') ||
-      (prefs.category === 'Both')
-    );
-
-    filteredData.forEach((item, index) => {
-      const T = item.toughness ?? item.T;
-      const E = item.edgeRetention ?? item.E;
-      const C = item.corrosion ?? item.C;
+    steelsToShow.forEach((steel, index) => {
+      const T = steel.toughness ?? steel.T;
+      const E = steel.edgeRetention ?? steel.E;
+      const C = steel.corrosion ?? steel.C;
       const total = T + E + C;
 
-      const tx = pointSpreadFactor * ((T / total) * corners[1][0] + (E / total) * corners[2][0] + (C / total) * corners[0][0]);
-      const ty = pointSpreadFactor * ((T / total) * corners[1][1] + (E / total) * corners[2][1] + (C / total) * corners[0][1]);
+      const tx = spread * ((T / total) * corners[1][0] + (E / total) * corners[2][0] + (C / total) * corners[0][0]);
+      const ty = spread * ((T / total) * corners[1][1] + (E / total) * corners[2][1] + (C / total) * corners[0][1]);
 
       const color = colorScale(index);
 
@@ -133,9 +122,9 @@ const DataPlot = ({ data, prefs }) => {
         .attr('cy', ty)
         .attr('r', 4)
         .attr('fill', color)
-        .on('mouseover', function (event) {
+        .on('mouseover', function () {
           tooltip.style('display', 'block')
-            .html(`${item.name}<br/>T: ${T}, E: ${E}, C: ${C}`);
+            .html(`${steel.name}<br/>T: ${T}, E: ${E}, C: ${C}`);
         })
         .on('mousemove', function (event) {
           tooltip.style('left', `${event.pageX + 10}px`)
@@ -145,66 +134,55 @@ const DataPlot = ({ data, prefs }) => {
           tooltip.style('display', 'none');
         });
 
-      const direction = index % 2 === 0 ? 1 : -1;
-      const offsetX = 8 * direction;
-      const offsetY = -12 * direction;
-
       g.append('text')
-        .attr('x', tx + offsetX)
-        .attr('y', ty + offsetY)
+        .attr('x', tx + (index % 2 === 0 ? 8 : -8))
+        .attr('y', ty + (index % 2 === 0 ? -12 : 12))
         .attr('font-size', '11px')
         .attr('alignment-baseline', 'middle')
         .attr('fill', color)
-        .text(item.name);
+        .text(steel.name);
     });
 
-    // Use getUserTecPreference to calculate adjusted TEC
-    if (prefs) {
-      const adjusted = getUserTecPreference(prefs);
-      const { edgeRetention, toughness, corrosion } = adjusted;
-      const total = toughness + edgeRetention + corrosion;
-      console.log('User TEC Preference (adjusted):', adjusted);
+    // Draw user preference
+    const { edgeRetention, toughness, corrosion } = getUserTecPreference(prefs);
+    const totalPref = toughness + edgeRetention + corrosion;
 
-      if (total > 0) {
-        let tx = pointSpreadFactor * ((toughness / total) * corners[1][0] + (edgeRetention / total) * corners[2][0] + (corrosion / total) * corners[0][0]);
-        let ty = pointSpreadFactor * ((toughness / total) * corners[1][1] + (edgeRetention / total) * corners[2][1] + (corrosion / total) * corners[0][1]);
+    if (totalPref > 0) {
+      let tx = spread * ((toughness / totalPref) * corners[1][0] + (edgeRetention / totalPref) * corners[2][0] + (corrosion / totalPref) * corners[0][0]);
+      let ty = spread * ((toughness / totalPref) * corners[1][1] + (edgeRetention / totalPref) * corners[2][1] + (corrosion / totalPref) * corners[0][1]);
 
-        const distance = Math.sqrt(tx * tx + ty * ty);
-        if (distance > radius) {
-          const scale = radius / distance;
-          tx *= scale;
-          ty *= scale;
-        }
-
-        g.append('circle')
-          .attr('cx', tx)
-          .attr('cy', ty)
-          .attr('r', 8)
-          .attr('fill', 'white')
-
-        // mousover feature for user prefrence score
-
-        // .on('mouseover', function (event) {
-        //   tooltip.style('display', 'block')
-        //     .html(`Your Preference<br/>T: ${toughness.toFixed(1)}, E: ${edgeRetention.toFixed(1)}, C: ${corrosion.toFixed(1)}`);
-        // })
-        // .on('mousemove', function (event) {
-        //   tooltip.style('left', `${event.pageX + 10}px`)
-        //     .style('top', `${event.pageY - 28}px`);
-        // })
-        // .on('mouseout', function () {
-        //   tooltip.style('display', 'none');
-        // });
-
-        g.append('text')
-          .attr('x', tx + 12)
-          .attr('y', ty - 12)
-          .attr('font-size', '12px')
-          .attr('font-weight', 'bold')
-          .attr('alignment-baseline', 'middle')
-          .attr('fill', 'white')
-          .text('Your Preference');
+      const distance = Math.sqrt(tx * tx + ty * ty);
+      if (distance > radius) {
+        const scale = radius / distance;
+        tx *= scale;
+        ty *= scale;
       }
+
+      g.append('circle')
+        .attr('cx', tx)
+        .attr('cy', ty)
+        .attr('r', 8)
+        .attr('fill', 'white')
+        .on('mouseover', function () {
+          tooltip.style('display', 'block')
+            .html(`Your Preference<br/>T: ${toughness.toFixed(1)}, E: ${edgeRetention.toFixed(1)}, C: ${corrosion.toFixed(1)}`);
+        })
+        .on('mousemove', function (event) {
+          tooltip.style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 28}px`);
+        })
+        .on('mouseout', function () {
+          tooltip.style('display', 'none');
+        });
+
+      g.append('text')
+        .attr('x', tx + 12)
+        .attr('y', ty - 12)
+        .attr('font-size', '12px')
+        .attr('font-weight', 'bold')
+        .attr('alignment-baseline', 'middle')
+        .attr('fill', 'white')
+        .text('Your Preference');
     }
   }, [data, prefs]);
 
@@ -218,7 +196,6 @@ const DataPlot = ({ data, prefs }) => {
       ></svg>
     </div>
   );
-
 };
 
 export default DataPlot;

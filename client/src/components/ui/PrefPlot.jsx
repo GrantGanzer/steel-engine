@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { select, drag } from "d3";
 
 const PrefPlot = ({ onWeightChange }) => {
-  const [toughnessWeight, setToughnessWeight] = useState(1);
-  const [edgeRetentionWeight, setEdgeRetentionWeight] = useState(1);
-  const [corrosionWeight, setCorrosionWeight] = useState(1);
+  const [weights, setWeights] = useState({
+    toughness: 1,
+    edgeRetention: 1,
+    corrosion: 1,
+  });
 
-  const handleWeightChange = (t, e, c) => {
-    setToughnessWeight(t);
-    setEdgeRetentionWeight(e);
-    setCorrosionWeight(c);
+  const updateWeights = (t, e, c) => {
+    setWeights({ toughness: t, edgeRetention: e, corrosion: c });
     onWeightChange(t, e, c);
   };
 
@@ -31,10 +31,11 @@ const PrefPlot = ({ onWeightChange }) => {
       .attr("fill", "none");
 
     const corners = [
-      [0, -radius],
-      [radius, 0],
-      [-radius, 0],
+      [0, -radius],        // Corrosion
+      [radius, 0],         // Edge Retention
+      [-radius, 0],        // Toughness
     ];
+
     const labels = ["Corrosion Resistance", "Edge Retention", "Toughness"];
 
     corners.forEach(([x, y], i) => {
@@ -54,28 +55,41 @@ const PrefPlot = ({ onWeightChange }) => {
         .text(labels[i]);
     });
 
-    const axisAngles = [0, Math.PI];
-    axisAngles.forEach((angle) => {
-      const x1 = radius * Math.cos(angle);
-      const y1 = radius * Math.sin(angle);
-      g.append("line")
-        .attr("x1", 0)
-        .attr("y1", 0)
-        .attr("x2", x1)
-        .attr("y2", y1)
-        .attr("stroke", "white")
-        .attr("stroke-width", 1);
-    });
+    g.selectAll(".radial-line")
+      .data([0, Math.PI])
+      .enter()
+      .append("line")
+      .attr("x1", 0)
+      .attr("y1", 0)
+      .attr("x2", (d) => radius * Math.cos(d))
+      .attr("y2", (d) => radius * Math.sin(d))
+      .attr("stroke", "white")
+      .attr("stroke-width", 1);
 
-    g.append("circle")
-      .attr("r", 8)
-      .attr("fill", "white")
-      .attr("cx", 0)
-      .attr("cy", 0)
-      .attr("class", "center-dot");
+    g.append("circle").attr("r", 8).attr("fill", "white").attr("class", "center-dot");
 
     let currentX = 0;
     let currentY = 0;
+
+    const handleDragEnd = () => {
+      const positions = [
+        { x: 0, y: -radius },    // Corrosion
+        { x: radius, y: 0 },     // Edge Retention
+        { x: -radius, y: 0 },    // Toughness
+      ];
+
+      let newWeights = { corrosion: 0, edgeRetention: 0, toughness: 0 };
+
+      positions.forEach((pos, idx) => {
+        const distance = Math.sqrt((currentX - pos.x) ** 2 + (currentY - pos.y) ** 2);
+        const weight = Math.min(4, Math.max(1 + (1 - distance / radius) * 3, 1));
+        if (idx === 0) newWeights.corrosion = weight;
+        if (idx === 1) newWeights.edgeRetention = weight;
+        if (idx === 2) newWeights.toughness = weight;
+      });
+
+      updateWeights(newWeights.toughness, newWeights.edgeRetention, newWeights.corrosion);
+    };
 
     g.append("circle")
       .attr("r", 13)
@@ -85,9 +99,7 @@ const PrefPlot = ({ onWeightChange }) => {
       .attr("class", "hoverable-dot")
       .call(
         drag()
-          .on("start", function () {
-            svg.selectAll(".center-dot").remove();
-          })
+          .on("start", () => svg.selectAll(".center-dot").remove())
           .on("drag", function (event) {
             const offsetX = event.x - width / 100;
             const offsetY = event.y - height / 100;
@@ -98,49 +110,32 @@ const PrefPlot = ({ onWeightChange }) => {
               select(this).attr("cx", currentX).attr("cy", currentY);
             }
           })
-          .on("end", function () {
-            svg.selectAll(".center-dot").remove();
-          })
-          .on("drag", function (event) {
-            const offsetX = event.x - width / 100;
-            const offsetY = event.y - height / 100;
-            const totalDistance = Math.sqrt(offsetX ** 2 + offsetY ** 2);
-            if (offsetY <= 0 && totalDistance <= radius) {
-              currentX = offsetX;
-              currentY = offsetY;
-              select(this).attr("cx", currentX).attr("cy", currentY);
-            }
-          })
-          .on("end", function () {
-            const labelPositions = [
-              { x: 0, y: -radius },
-              { x: radius, y: 0 },
-              { x: -radius, y: 0 },
-            ];
-
-            let corrosionWeight = 0;
-            let edgeRetentionWeight = 0;
-            let toughnessWeight = 0;
-
-            labelPositions.forEach((label, index) => {
-              const distance = Math.sqrt(
-                (currentX - label.x) ** 2 + (currentY - label.y) ** 2
-              );
-              const weight = Math.min(4, Math.max(1 + (1 - distance / radius) * 3, 1));
-              if (index === 0) corrosionWeight = weight;
-              if (index === 1) edgeRetentionWeight = weight;
-              if (index === 2) toughnessWeight = weight;
-            });
-
-            handleWeightChange(toughnessWeight, edgeRetentionWeight, corrosionWeight);
-          })
+          .on("end", handleDragEnd)
       );
   }, []);
+
+  const bars = [
+    {
+      name: "Toughness",
+      value: weights.toughness,
+      tooltip: "Resists chipping under stress,\nbut may dull faster.",
+    },
+    {
+      name: "Edge Retention",
+      value: weights.edgeRetention,
+      tooltip: "Holds a sharp edge longer,\nwith less impact durability.",
+    },
+    {
+      name: "Corrosion Resistance",
+      value: weights.corrosion,
+      tooltip: "Excels in wet conditions,\nbut may sacrifice strength or edge life.",
+    },
+  ];
 
   return (
     <div className="flex flex-col items-center w-full max-w-3xl px-4 mx-auto">
       <div className="mb-4 p-3 rounded-lg text-white text-m">
-        <p><strong>Set your prefered balance:</strong></p>
+        <p><strong>Set your preferred balance:</strong></p>
         <p className="mt-2">Your selection shapes the ideal steel match.</p>
       </div>
 
@@ -152,47 +147,20 @@ const PrefPlot = ({ onWeightChange }) => {
           preserveAspectRatio="xMidYMid meet"
         ></svg>
       </div>
+
       <div className="mt-6 flex flex-col items-start gap-3 w-full sm:w-auto">
-        <div className="flex items-center gap-2 relative group">
-          {/* Info Bubble */}
-          <div className="relative flex items-center">
-            <span className="text-black cursor-pointer text-sm rounded-full bg-gray-300 w-3 h-3 flex items-center justify-center">i</span>
-
-            {/* Tooltip */}
-            <div className="absolute right-6 mb-1 hidden group-hover:flex w-48 p-2 rounded-md bg-gray-800 text-white text-sm z-10">
-              <p className="text-xs leading-tight">Resists chipping under stress, <br />but may dull faster.</p>
+        {bars.map(({ name, value, tooltip }, i) => (
+          <div key={name} className="flex items-center gap-2 relative group">
+            <div className="relative flex items-center">
+              <span className="text-black cursor-pointer text-sm rounded-full bg-gray-300 w-3 h-3 flex items-center justify-center">i</span>
+              <div className="absolute right-6 mb-1 hidden group-hover:flex w-48 p-2 rounded-md bg-gray-800 text-white text-sm z-10 whitespace-pre-wrap">
+                <p className="text-xs leading-tight">{tooltip}</p>
+              </div>
             </div>
+            <p className="text-white text-lg w-32 font-semibold">{name}:</p>
+            <div className="h-4 bg-red-700" style={{ width: `${value * 35 - 30}px` }}></div>
           </div>
-          <p className="text-white text-lg w-32 font-semibold">Toughness:</p>
-
-          <div className="h-4 bg-red-700" style={{ width: `${toughnessWeight * 35 - 30}px` }}></div>
-        </div>
-        <div className="flex items-center gap-2 relative group">
-          {/* Info Bubble */}
-          <div className="relative flex items-center">
-            <span className="text-black cursor-pointer text-sm rounded-full bg-gray-300 w-3 h-3 flex items-center justify-center">i</span>
-
-            {/* Tooltip */}
-            <div className="absolute right-6 mb-1 hidden group-hover:flex w-48 p-2 rounded-md bg-gray-800 text-white text-sm z-10">
-              <p className="text-xs leading-tight">Holds a sharp edge longer, <br></br>with less impact durability.</p>
-            </div>
-          </div>
-          <p className="text-white text-lg w-32 font-semibold">Edge Retention:</p>
-          <div className="h-4 bg-red-700" style={{ width: `${edgeRetentionWeight * 35 - 30}px` }}></div>
-        </div>
-        <div className="flex items-center gap-2 relative group">
-          {/* Info Bubble */}
-          <div className="relative flex items-center">
-            <span className="text-black cursor-pointer text-sm rounded-full bg-gray-300 w-3 h-3 flex items-center justify-center">i</span>
-
-            {/* Tooltip */}
-            <div className="absolute right-6 mb-1 hidden group-hover:flex w-48 p-2 rounded-md bg-gray-800 text-white text-sm z-10">
-              <p className="text-xs leading-tight">Excels in wet conditions, <br></br>but may sacrifice strength or edge life.</p>
-            </div>
-          </div>
-          <p className="text-white text-lg w-32 font-semibold">Corrosion Resistance:</p>
-          <div className="h-4 bg-red-700" style={{ width: `${corrosionWeight * 35 - 30}px` }}></div>
-        </div>
+        ))}
       </div>
     </div>
   );
