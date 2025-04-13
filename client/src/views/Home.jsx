@@ -231,11 +231,11 @@ const Home = () => {
                   )}
                 </div>
 
-                <div className="flex flex-row flex-wrap justify-center items-start mt-6 px-2 gap-x-2 gap-y-4">
+                <div className="flex flex-row flex-wrap justify-center items-start mt-6 px-2 gap-x-0 gap-y-4">
                   <div className="w-[60%] min-w-[640px] max-w-[880px]">
                     <DataPlot data={steels} prefs={prefs} />
                   </div>
-                  <div className="transform scale-75 origin-top-left mx-auto sm:mx-0 mt-4 lg:mt-0">
+                  <div className="transform scale-75 origin-center mx-auto mt-4 lg:mt-0 lg:-ml-5">
                     <SteelKey steels={steels} prefs={prefs} />
                   </div>
                 </div>
