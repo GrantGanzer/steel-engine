@@ -78,13 +78,27 @@ const PrefPlot = ({ onWeightChange }) => {
     let currentY = 0;
 
     g.append("circle")
-      .attr("r", 8)
+      .attr("r", 13)
       .attr("fill", "white")
       .attr("cx", currentX)
       .attr("cy", currentY)
+      .attr("class", "hoverable-dot")
       .call(
         drag()
           .on("start", function () {
+            svg.selectAll(".center-dot").remove();
+          })
+          .on("drag", function (event) {
+            const offsetX = event.x - width / 100;
+            const offsetY = event.y - height / 100;
+            const totalDistance = Math.sqrt(offsetX ** 2 + offsetY ** 2);
+            if (offsetY <= 0 && totalDistance <= radius) {
+              currentX = offsetX;
+              currentY = offsetY;
+              select(this).attr("cx", currentX).attr("cy", currentY);
+            }
+          })
+          .on("end", function () {
             svg.selectAll(".center-dot").remove();
           })
           .on("drag", function (event) {
@@ -126,12 +140,10 @@ const PrefPlot = ({ onWeightChange }) => {
   return (
     <div className="flex flex-col items-center w-full max-w-3xl px-4 mx-auto">
       <div className="mb-4 p-3 rounded-lg text-white text-m">
-        <p><strong>Set your TEC preferences:</strong></p>
-        <p>Favoring toughness will highlight steels that resist chipping and excel under impact.</p>
-        <p>Choosing edge retention prioritizes steels that stay sharper for longer.</p>
-        <p>Emphasizing corrosion resistance brings forward options better suited to wet or humid conditions.</p>
-        <p className="mt-2">These choices will shape the recommendations we make for you.</p>
+        <p><strong>Set your prefered balance:</strong></p>
+        <p className="mt-2">Your selection shapes the ideal steel match.</p>
       </div>
+
       <div className="w-full overflow-x-auto">
         <svg
           id="prefplot"
@@ -141,17 +153,45 @@ const PrefPlot = ({ onWeightChange }) => {
         ></svg>
       </div>
       <div className="mt-6 flex flex-col items-start gap-3 w-full sm:w-auto">
-        <div className="flex items-center gap-2">
-          <p className="text-white text-sm w-32">Toughness</p>
-          <div className="h-4 bg-white" style={{ width: `${toughnessWeight * 35 - 30}px` }}></div>
+        <div className="flex items-center gap-2 relative group">
+          {/* Info Bubble */}
+          <div className="relative flex items-center">
+            <span className="text-black cursor-pointer text-sm rounded-full bg-gray-300 w-3 h-3 flex items-center justify-center">i</span>
+
+            {/* Tooltip */}
+            <div className="absolute right-6 mb-1 hidden group-hover:flex w-48 p-2 rounded-md bg-gray-800 text-white text-sm z-10">
+              <p className="text-xs leading-tight">Resists chipping under stress, <br />but may dull faster.</p>
+            </div>
+          </div>
+          <p className="text-white text-lg w-32 font-semibold">Toughness:</p>
+
+          <div className="h-4 bg-red-700" style={{ width: `${toughnessWeight * 35 - 30}px` }}></div>
         </div>
-        <div className="flex items-center gap-2">
-          <p className="text-white text-sm w-32">Edge Retention</p>
-          <div className="h-4 bg-white" style={{ width: `${edgeRetentionWeight * 35 - 30}px` }}></div>
+        <div className="flex items-center gap-2 relative group">
+          {/* Info Bubble */}
+          <div className="relative flex items-center">
+            <span className="text-black cursor-pointer text-sm rounded-full bg-gray-300 w-3 h-3 flex items-center justify-center">i</span>
+
+            {/* Tooltip */}
+            <div className="absolute right-6 mb-1 hidden group-hover:flex w-48 p-2 rounded-md bg-gray-800 text-white text-sm z-10">
+              <p className="text-xs leading-tight">Holds a sharp edge longer, <br></br>with less impact durability.</p>
+            </div>
+          </div>
+          <p className="text-white text-lg w-32 font-semibold">Edge Retention:</p>
+          <div className="h-4 bg-red-700" style={{ width: `${edgeRetentionWeight * 35 - 30}px` }}></div>
         </div>
-        <div className="flex items-center gap-2">
-          <p className="text-white text-sm w-32">Corrosion Resistance</p>
-          <div className="h-4 bg-white" style={{ width: `${corrosionWeight * 35 - 30}px` }}></div>
+        <div className="flex items-center gap-2 relative group">
+          {/* Info Bubble */}
+          <div className="relative flex items-center">
+            <span className="text-black cursor-pointer text-sm rounded-full bg-gray-300 w-3 h-3 flex items-center justify-center">i</span>
+
+            {/* Tooltip */}
+            <div className="absolute right-6 mb-1 hidden group-hover:flex w-48 p-2 rounded-md bg-gray-800 text-white text-sm z-10">
+              <p className="text-xs leading-tight">Excels in wet conditions, <br></br>but may sacrifice strength or edge life.</p>
+            </div>
+          </div>
+          <p className="text-white text-lg w-32 font-semibold">Corrosion Resistance:</p>
+          <div className="h-4 bg-red-700" style={{ width: `${corrosionWeight * 35 - 30}px` }}></div>
         </div>
       </div>
     </div>

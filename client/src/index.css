@@ -10,7 +10,6 @@ body,
   width: 100%;
   margin: 0;
   padding: 0;
-  background-color: #121212;
   color: white;
   font-family: "Helvetica Neue", Arial, sans-serif;
   display: flex;
@@ -93,4 +92,17 @@ h1 {
   height: auto;
   margin: 0 auto;
   object-fit: contain;
+}
+.hoverable-dot {
+  transition: fill 0.2s ease;
+  cursor: pointer;
+}
+
+.hoverable-dot:hover {
+  fill: #b91c1c !important;
+}
+
+body {
+  @apply bg-cover bg-center bg-no-repeat;
+  background-image: url("/images/dama.jpg");
 }

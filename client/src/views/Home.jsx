@@ -155,30 +155,56 @@ const Home = () => {
   );
 
   return (
-    <div className="container mx-auto px-4 pt-40">
+    <div className="container  mx-auto px-4 pt-40">
       <Nav resetQuestionnaire={resetQuestionnaire} />
 
       <div className="contentContainer">
         {!result ? (
           <Card>
-            <CardContent className="space-y-6 p-6">
+            <CardContent className="space-y-6 p-6 flex flex-col justify-between min-h-[300px]">
               {renderQuestion()}
+              {step >= 1 && !result && (
+                <div className="flex justify-center mt-10">
+                  <button
+                    onClick={resetQuestionnaire}
+                    className="border border-spydercoRed text-spydercoRed text-xs px-2 py-1 rounded  hover:bg-red-700  hover:border-red-700 hover:text-white transition"
+                  >
+                    Start Over
+                  </button>
+                </div>
+              )}
             </CardContent>
+
           </Card>
         ) : (
           <Card>
             <CardContent className="p-6 text-center">
               <div className="resultContainer">
-                <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col md:flex-row gap-4 px-4 sm:px-8 md:px-12 lg:px-60">
                   {Array.isArray(result) && <SteelTable steels={result} title={prefs.category + " Steel"} />}
                   {result.tool && result.tool.length > 0 && <SteelTable steels={result.tool} title="Tool Steel" />}
                   {result.stainless && result.stainless.length > 0 && <SteelTable steels={result.stainless} title="Stainless Steel" />}
                 </div>
 
-                <div className="flex flex-col md:flex-row justify-around">
-                  <DataPlot data={steels} prefs={prefs} />
-                  <SteelKey steels={steels} prefs={prefs} />
+                <div className="flex flex-col lg:flex-row justify-center items-start mt-6 px-2">
+                  <div className="lg:w-[60%] flex justify-center">
+                    <DataPlot data={steels} prefs={prefs} />
+                  </div>
+                  <div className="transform scale-75 origin-top-left lg:ml-0 mt-4 lg:mt-0">
+                    <SteelKey steels={steels} prefs={prefs} />
+                  </div>
                 </div>
+
+
+              </div>
+              <div className="flex justify-center mt-4">
+                <button
+                  onClick={resetQuestionnaire}
+                  className="border border-spydercoRed text-spydercoRed text-xs px-2 py-1 rounded  hover:bg-red-700  hover:border-red-700 hover:text-white transition"
+
+                >
+                  Start a new recommendation
+                </button>
               </div>
             </CardContent>
           </Card>

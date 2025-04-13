@@ -44,3 +44,11 @@
 .read-the-docs {
   color: #888;
 }
+.hoverable-dot {
+  transition: fill 0.2s ease;
+  cursor: pointer;
+}
+
+.hoverable-dot:hover {
+  fill: #b91c1c !important; /* Spyderco red (red-700) */
+}
