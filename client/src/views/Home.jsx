@@ -244,7 +244,7 @@ const Home = () => {
               <div className="flex justify-center mt-4">
                 <button
                   onClick={resetQuestionnaire}
-                  className="border border-spydercoRed text-spydercoRed text-xs px-2 py-1 rounded hover:bg-red-700 hover:border-red-700 hover:text-white transition"
+                  className="border border-spydercoRed text-spydercoRed text-xs mb-10 px-2 py-1 rounded hover:bg-red-700 hover:border-red-700 hover:text-white transition"
                 >
                   Start a new recommendation
                 </button>
