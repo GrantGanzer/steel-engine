@@ -148,7 +148,7 @@ const PrefPlot = ({ onWeightChange }) => {
         ></svg>
       </div>
 
-      <div className="mt-6 flex flex-col items-start gap-3 w-full sm:w-auto">
+      <div className="mt-6 flex flex-col items-center gap-3 w-full sm:w-auto">
         {bars.map(({ name, value, tooltip }, i) => (
           <div key={name} className="flex items-center gap-2 relative group">
             <div className="relative flex items-center">
