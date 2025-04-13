@@ -103,6 +103,8 @@ h1 {
 }
 
 body {
-  @apply bg-cover bg-center bg-no-repeat;
+  @apply bg-cover bg-center bg-no-repeat bg-fixed;
   background-image: url("/images/dama.jpg");
+  min-height: 100vh;
+
 }
