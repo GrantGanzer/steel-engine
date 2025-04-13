@@ -215,17 +215,17 @@ const Home = () => {
               <div className="resultContainer">
                 <div className="flex flex-wrap justify-center gap-6 px-4 sm:px-8 md:px-12">
                   {Array.isArray(result) && (
-                    <div className="flex-1 min-w-[350px] max-w-[550px]">
+                    <div className="flex-1 min-w-[400px] max-w-[600px]">
                       <SteelTable steels={result} title={prefs.category + " Steel"} />
                     </div>
                   )}
                   {result.tool?.length > 0 && (
-                    <div className="flex-1 min-w-[350px] max-w-[550px]">
+                    <div className="flex-1 min-w-[400px] max-w-[600px]">
                       <SteelTable steels={result.tool} title="Tool Steel" />
                     </div>
                   )}
                   {result.stainless?.length > 0 && (
-                    <div className="flex-1 min-w-[350px] max-w-[550px]">
+                    <div className="flex-1 min-w-[400px] max-w-[600px]">
                       <SteelTable steels={result.stainless} title="Stainless Steel" />
                     </div>
                   )}

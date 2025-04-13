@@ -1,5 +1,5 @@
 const SteelTable = ({ steels, title }) => (
-  <div className="w-full mt-4 px-2">
+  <div className="w-full mt-4 px-2 overflow-x-auto">
     <div className="w-full rounded-xl border-spacing-1 border-white/10 ">
       <table className="w-full table-fixed text-sm leading-tight">
         <thead>
