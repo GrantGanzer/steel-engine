@@ -36,7 +36,7 @@ const SteelKey = ({ steels = [], prefs = {} }) => {
   );
 
   return (
-    <div id="key" className="mt-6 gap-8 text-sm text-white/90">
+    <div id="key" className="gap-8 text-sm text-white/90">
       {toolSteels.length > 0 && renderSteelList("Tool Steels", toolSteels)}
       {stainlessSteels.length > 0 && renderSteelList("Stainless Steels", stainlessSteels)}
     </div>

@@ -235,7 +235,7 @@ const Home = () => {
                   <div className="w-[60%] min-w-[640px] max-w-[880px]">
                     <DataPlot data={steels} prefs={prefs} />
                   </div>
-                  <div className="transform scale-75 origin-top-left lg:ml-0 mt-4 lg:mt-0">
+                  <div className="transform scale-75 origin-top-left mx-auto sm:mx-0 mt-4 lg:mt-0">
                     <SteelKey steels={steels} prefs={prefs} />
                   </div>
                 </div>
