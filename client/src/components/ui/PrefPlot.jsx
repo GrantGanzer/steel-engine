@@ -153,11 +153,11 @@ const PrefPlot = ({ onWeightChange }) => {
           <div key={name} className="flex items-center gap-2 relative group">
             <div className="relative flex items-center">
               <span className="text-black cursor-pointer text-sm rounded-full bg-gray-300 w-3 h-3 flex items-center justify-center">i</span>
-              <div className="absolute right-6 mb-1 hidden group-hover:flex w-48 p-2 rounded-md bg-gray-800 text-white text-sm z-10 whitespace-pre-wrap">
+              <div className="absolute right-6 mb-1 hidden group-hover:flex w-24 p-2 rounded-md bg-gray-800 text-white text-sm z-10 whitespace-pre-wrap">
                 <p className="text-xs leading-tight">{tooltip}</p>
               </div>
             </div>
-            <p className="text-white text-lg w-32 font-semibold">{name}:</p>
+            <p className="text-white text-lg w-28 font-semibold">{name}:</p>
             <div className="h-4 bg-red-700" style={{ width: `${value * 35 - 30}px` }}></div>
           </div>
         ))}

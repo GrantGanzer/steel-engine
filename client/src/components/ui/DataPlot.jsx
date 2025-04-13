@@ -163,10 +163,10 @@ const DataPlot = ({ data, prefs }) => {
         .attr('cy', ty)
         .attr('r', 8)
         .attr('fill', 'white')
-        .on('mouseover', function () {
-          tooltip.style('display', 'block')
-            .html(`Your Preference<br/>T: ${toughness.toFixed(1)}, E: ${edgeRetention.toFixed(1)}, C: ${corrosion.toFixed(1)}`);
-        })
+        // .on('mouseover', function () {
+        //   tooltip.style('display', 'block')
+        //     .html(`Your Preference<br/>T: ${toughness.toFixed(1)}, E: ${edgeRetention.toFixed(1)}, C: ${corrosion.toFixed(1)}`);
+        // })
         .on('mousemove', function (event) {
           tooltip.style('left', `${event.pageX + 10}px`)
             .style('top', `${event.pageY - 28}px`);

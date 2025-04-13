@@ -190,7 +190,7 @@ const Home = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 pt-40">
+<div className="container mx-auto px-4 sm:px-6 md:px-8 pt-40">
       <Nav resetQuestionnaire={resetQuestionnaire} />
       <div className="contentContainer">
         {!result ? (
